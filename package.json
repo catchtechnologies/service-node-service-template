@@ -1,0 +1,164 @@
+{
+  "name": "service-node-service-template",
+  "version": "1.0.0",
+  "description": "A template for make Service Node services.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js",
+    "doc": "jsdoc main.js",
+    "build": "pkg ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/catchtechnologies/service-node-service-template.git"
+  },
+  "author": "Patrick Murray",
+  "license": "MIT",
+  "dependencies": {
+    "catch-messaging": "^1.2.2",
+    "pkg": "^4.4.8",
+    "redis": "^3.0.2",
+    "yargs": "^15.3.1"
+  },
+  "pkg": {
+    "scripts": "js/**/*.js"
+  },
+  "bin": "main.js",
+  "parameters": [
+    {
+      "parameter": "stringParameter",
+      "name": "Sample String Parameter",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "placeholder": "Enter the string.",
+      "tooltip": "A sample string parameter."
+    },
+    {
+      "parameter": "numberParameter",
+      "name": "Sample Number Parameter",
+      "type": "number",
+      "default": 23,
+      "required": false,
+      "placeholder": "Enter the number.",
+      "tooltip": "A sample number parameter."
+    },
+    {
+      "parameter": "debug",
+      "name": "Debug",
+      "type": "bool",
+      "default": false,
+      "required": false,
+      "placeholder": "",
+      "tooltip": "Prints debug messages when enabled."
+    },
+    {
+      "parameter": "arrayParameter",
+      "name": "Sample Array Parameter",
+      "type": "array",
+      "options": [
+        {
+          "label": "Value 1",
+          "value": "value 1"
+        },
+        {
+          "label": "Value 2",
+          "value": "value 2"
+        }
+      ],
+      "default": "string",
+      "required": false,
+      "tooltip": "A sample array parameter."
+    }
+  ],
+  "commands": [
+    {
+      "name": "Connect",
+      "editable": true,
+      "pattern": "connect",
+      "useHex": false,
+      "endWith": "none",
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Connects the service."
+        }
+      ],
+      "channel": "example.service.connect"
+    },
+    {
+      "name": "Disconnect",
+      "editable": true,
+      "pattern": "disconnect",
+      "useHex": false,
+      "endWith": "none",
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Disconnects the service."
+        }
+      ],
+      "channel": "example.service.disconnect"
+    },
+    {
+      "name": "Send Command",
+      "editable": true,
+      "pattern": "#PAYLOAD#",
+      "useHex": false,
+      "endWith": "none",
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Sends the channel value to the service."
+        }
+      ],
+      "channel": "example.service.send"
+    }
+  ],
+  "responses": [
+    {
+      "name": "Connected",
+      "editable": true,
+      "pattern": "connected",
+      "useHex": false,
+      "endWith": "none",
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Indicates when the service is connected."
+        }
+      ],
+      "channel": "example.service.connected"
+    },
+    {
+      "name": "Disconnected",
+      "editable": true,
+      "pattern": "disconnected",
+      "useHex": false,
+      "endWith": "none",
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Indicates when the service is disconnected."
+        }
+      ],
+      "channel": "example.service.disconnected"
+    },
+    {
+      "name": "Received",
+      "editable": true,
+      "pattern": "^(.+)$",
+      "useHex": false,
+      "endWith": "none",
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Returns all replies without special ending characters from the service."
+        }
+      ],
+      "channel": "example.service.received"
+    }
+  ]
+}
