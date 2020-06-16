@@ -1,33 +1,23 @@
 # Service Node Service Template
-The [Service Node](https://www.catchtechnologies.com/service-node/) allows you to run your own custom services. A custom service is a node.js application that Service Node launches instances of as child processes. Different service instances communicate with each other through a publish/subscribe (pusub) bus.  
+The [Service Node](https://www.catchtechnologies.com/service-node/) allows you to run your own custom services. A Service Node service is a node.js application that Service Node launches instances of as child processes. Different service instances communicate with each other through a publish/subscribe (pubsub) bus.  
 
 This template includes:  
+- Sample package.json fields for launching service instances with custom parameters  
 - pubsub messaging with the catch-messaging package  
-- an example of the package.json fields Service Node uses for:  
-  - building the service  
-  - launching service instances with custom parameters  
-  - defining commands the service can receive  
-  - defining responses the service can send  
-
-## redis pubsub  
-Service Node uses (redis)[https://redis.io] pubsub for messaging between services. Values are published to a channel and any service listening on that channel is informed whenever the channel is published to.  A pubsub message consists of a channel and a value. The value may be empty.  
-
-Your service can use the pubsub bus directly with [node-redis](https://github.com/NodeRedis/node-redis#pubsub), or use Catch Messaging.
-
-## Catch Messaging  
-Catch Messaging integrates redis pubsub with a messaging format that works with the Service Node dashboard. Your app must be programmed to accept commands and emit responses as strings.  
-
-Default commands and responses are defined in package.json. The messages can be modified per instance in Service Node's dashboard and csv files can be imported through the dashboard to handle large numbers of messages.  
-
-Catch Messaging analyzes the pubsub channels for each command and response to prevent loops. If a command uses the same channel as one of the responses, the command will not subscribe to the channel.  
+- Sample package.json fields for defining commands the service can receive  
+- Sample functions to parse commands  
+- Sample package.json fields for defining responses the service can send  
+- Sample functions to send responses
+- Sample package.json fields for building the service  
+- Functions to exit cleanly  
 
 ## Service Parameters  
-Service parameter values are entered in Service Node's dashboard passed to your application when the service instance is started.  
+Service parameter values are entered in Service Node's dashboard and passed to your application when the service instance is started.  
 
-This template uses [yargs](https://www.npmjs.com/package/yargs) to parse service parameters.  
+This template uses [yargs](https://www.npmjs.com/package/yargs) to parse the service parameters.  
 
 The following parameter types are support:
-- `serviceName` The service name is always passed to to the service instance as argv.serviceName. serviceName should not be included in package.json.   
+- `serviceName` The service name is always passed to to the service instance as argv.serviceName. serviceName does not need to be included in package.json.   
 - `string` A string.  
 - `number` A number.  
 - `bool` Either `true` or `false`.  
@@ -83,6 +73,18 @@ Here is an example of how the `parameters` field should look in package.json:
     }
   ]
 ``` 
+
+## redis pubsub  
+Service Node uses (redis)[https://redis.io] pubsub for messaging between services. Values are published to a channel and any service subscribed to that channel is informed whenever the channel is published to.  A pubsub message consists of a channel and a value. The value may be empty.  
+
+Your service can use the pubsub bus directly with [node-redis](https://github.com/NodeRedis/node-redis#pubsub), or use Catch Messaging. Be careful to not create pubsub loops when using the pubsub bus directly. This will decrease Service Node's performance.  
+
+## Catch Messaging  
+Catch Messaging integrates redis pubsub with a messaging format that works with the Service Node dashboard. To use Catch Messaging, your app must be programmed to accept commands and emit responses as strings.  
+
+Default commands and responses are defined in package.json. The messages can be modified per instance in Service Node's dashboard and csv files can be imported through the dashboard to handle large numbers of messages.  
+
+Catch Messaging analyzes the pubsub channels when the service starts for each command and response to prevent loops. If a command uses the same channel as one of the responses, the command will not get subscribed to the channel.  
 
 ## Service Commands  
 Service Commands are sent to your application with [repl](https://nodejs.org/api/repl.html) and parsed to call a function.  
@@ -160,7 +162,7 @@ In the following example, when your app sends the string `connected` to Catch Me
 `useRegularExpression` allows you to embed a value to be published in the response string. Include `^(.+)$` in the response pattern to embed a value. Everything not included in the pattern before the `(` will be published as the value.  
 
 ### Regular Expression Example  
-If the pattern is defined as:  
+If a response pattern is defined as:  
 ``^lighting load = (.+)$``  
 
 And the service sends to Catch Messaging:  
@@ -221,7 +223,9 @@ Here is an example of how the `responses` field should look in package.json:
 After your service is uploaded to Service Node, it is built into a single file using [pkg](https://github.com/zeit/pkg).  
 
 The entry point of you application must be included in the `bin` field of package.json:  
-`"bin": "main.js"`  
+```json
+"bin": "main.js"
+```  
 
 Define any external assets your build requires in package.json as follows (this example includes all `.js` files from a directory named `js`):  
 ```json
@@ -237,15 +241,15 @@ It is a good idea to create a test build before uploading to Service Node to see
 ## Deploy To Service Node  
 To prepare your application for Service Node, compress all the needed files into a `.zip` file. Service Node runs npm install during the build process, so there is no need to include the `node_modules` folder. Any unneeded files should be excluded to keep the compressed file size down for uploading.  
 
-Then click the Gear icon on you Service Node dashboard, navigate to `Service Library`and click `Upload New Service`.  
+Then click the Gear icon on you Service Node dashboard, navigate to `Service Library` and click `Upload New Service`.  
 
 Service Node then does the following:  
 - Uploads the zip file.  
 - Unzips it.  
 - Runs npm install.  
 - Runs pkg.  
-- Saves the file compiled with pkg and package.json to create future service instances.  
+- Saves package.json and the file compiled with pkg to create future service instances.  
 - Deletes all other files.  
 
 ## Using the Service  
-To create an instance of your service, click the Gear icon on you Service Node dashboard, navigate to `Services`and click `Add New Service`. Select your service from the list, give it a name, adjust the parameters and messages and click save. The service will automatically start when saved and every time Service Node starts.  
+To create an instance of your service, click the Gear icon on you Service Node dashboard, navigate to `Services` and click `Add New Service`. Select your service from the list, give it a name, adjust the parameters and messages and click `Save`. The service will automatically start when saved and every time Service Node starts.  

@@ -132,7 +132,7 @@ function publish(message){
  * @param {string} value - The value to publish.
  */
 function publishDirect(channel, value) {  
-  publisher.publish(channel, value);
+  messaging.publisher.publish(channel, value);
 }
 
 /* Example Database Queries  */

@@ -1,6 +1,6 @@
 {
   "name": "service-node-service-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A template for make Service Node services.",
   "main": "main.js",
   "scripts": {
