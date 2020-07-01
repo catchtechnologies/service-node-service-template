@@ -148,14 +148,14 @@ function createDatabaseQuerier() {
 }
 
 /**
- * Queries the databse for values of all known channels. Replies are returned in the Database callback.
+ * Queries the database for values of all known channels. Replies are returned in the Database callback.
  */
 function getAllChannelValuesFromDatabase() {
   database.getAllChannelValues();
 }
 
 /**
- * Queries the databse for values of all known channels. Replies are returned in the Database callback.
+ * Queries the database for values of all known channels. Replies are returned in the Database callback.
 * @param {string[]} channels - The channels to get values for.
  */
 function getChannelValuesFromDatabase(channels) {

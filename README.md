@@ -157,6 +157,8 @@ Defining your responses in package.json allows them to be edited in Service Node
 
 In the following example, when your app sends the string `connected` to Catch Messaging, a value of `null` is published to the channel `example.service.connected`.  
 
+Setting the `persist` field to true tells Service Node to store published messages to the even timeline and the store the channel/value pair in its own key.  
+
 `useHex` and `endWith` fields are used the same way as Service Commands.  
 
 `useRegularExpression` allows you to embed a value to be published in the response string. Include `^(.+)$` in the response pattern to embed a value. Everything not included in the pattern before the `(` will be published as the value.  
@@ -185,7 +187,8 @@ Here is an example of how the `responses` field should look in package.json:
           "body": "Indicates when the service is connected."
         }
       ],
-      "channel": "example.service.connected"
+      "channel": "example.service.connected",
+      "persist": false
     },
     {
       "name": "Disconnected",
@@ -199,7 +202,8 @@ Here is an example of how the `responses` field should look in package.json:
           "body": "Indicates when the service is disconnected."
         }
       ],
-      "channel": "example.service.disconnected"
+      "channel": "example.service.disconnected",
+      "persist": false
     },
     {
       "name": "Received",
@@ -214,7 +218,8 @@ Here is an example of how the `responses` field should look in package.json:
           "body": "Returns all replies without special ending characters from the service."
         }
       ],
-      "channel": "example.service.received"
+      "channel": "example.service.received",
+      "persist": false
     }
   ]
   ```
@@ -240,6 +245,8 @@ It is a good idea to create a test build before uploading to Service Node to see
 
 ## Deploy To Service Node  
 To prepare your application for Service Node, compress all the needed files into a `.zip` file. Service Node runs npm install during the build process, so there is no need to include the `node_modules` folder. Any unneeded files should be excluded to keep the compressed file size down for uploading.  
+
+It is a good idea to include a [`package-lock.json` file](https://nodejs.dev/learn/the-package-lock-json-file) in your zip upload. Buidling on  Service Node may fail without it. Run `npm install` locally to create a `package-lock.json`.  
 
 Then click the Gear icon on you Service Node dashboard, navigate to `Service Library` and click `Upload New Service`.  
 
