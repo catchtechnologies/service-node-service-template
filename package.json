@@ -18,7 +18,7 @@
   "dependencies": {
     "catch-messaging": "^1.4.2",
     "pkg": "^4.4.8",
-    "redis": "^3.0.2",
+    "redis": "^3.1.2",
     "yargs": "^15.3.1"
   },
   "pkg": {
